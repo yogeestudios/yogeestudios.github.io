@@ -30,7 +30,7 @@ GAMES = [
          blurb="A neon puzzle-action game. Mark, capture and blast a rolling wall of cubes before the stage crumbles under you.",
          facts=["9 worlds to conquer", "Endless mode", "Game Center leaderboards"]),
     dict(slug="itty-bitty-angler", name="Itty Bitty Angler", tag="Big fish. Tiny world.", accent="#f39a1e",
-         status="In development", store=None, shots=2, docs=False,
+         status="In development", store=None, docs=False,
          blurb="A top-down fishing adventure. Steer your boat across hand-crafted waters, spot shadows under the surface, land your lure in front of them and fight each fish in a tug-of-war.",
          facts=["A journal of species to fill", "Gear to upgrade", "Legends hiding in every region"]),
 ]
