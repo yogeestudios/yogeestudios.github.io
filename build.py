@@ -30,7 +30,7 @@ GAMES = [
          blurb="A neon puzzle-action game. Mark, capture and blast a rolling wall of cubes before the stage crumbles under you.",
          facts=["9 worlds to conquer", "Endless mode", "Game Center leaderboards"]),
     dict(slug="itty-bitty-angler", name="Itty Bitty Angler", tag="Big fish. Tiny world.", accent="#f39a1e",
-         status="In development", store=None, docs=False,
+         status="In development", store=None, shots=1, docs=False,
          blurb="A top-down fishing adventure. Steer your boat across hand-crafted waters, spot shadows under the surface, land your lure in front of them and fight each fish in a tug-of-war.",
          facts=["A journal of species to fill", "Gear to upgrade", "Legends hiding in every region"]),
 ]
@@ -155,7 +155,7 @@ def game_card(g):
       <ul class="facts">{facts}</ul>
       <div class="links">{btn or f'<span class="btn alt" aria-disabled="true">{label}</span>'}{docs}</div>
     </div>
-    <div class="shots" style="grid-template-columns: repeat({n}, 1fr)">{shots}</div>
+    <div class="shots" style="grid-template-columns: repeat({max(n, 2)}, 1fr)">{shots}</div>
   </div>
 </article>"""
 
