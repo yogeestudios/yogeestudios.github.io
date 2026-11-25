@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Builds the yoGee studios website. Edit the GAMES list or the text below, then run:  python3 build.py"""
-import html, os, re
+import hashlib, html, os, re
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PROJECTS = os.path.dirname(ROOT)
@@ -104,6 +104,10 @@ footer a { color: var(--soft); margin: 0 8px; }
 }
 """
 
+def v(rel):
+    """Image path with a content hash, so browsers reload changed images."""
+    return f"{rel}?v=" + hashlib.md5(open(os.path.join(ROOT, rel), "rb").read()).hexdigest()[:8]
+
 def page(title, body, depth=0, desc=""):
     up = "../" * depth
     return f"""<!doctype html>
@@ -137,15 +141,15 @@ def game_card(g):
            else None)
     facts = "".join(f"<li>{html.escape(f)}</li>" for f in g["facts"])
     n = g.get("shots", 3)
-    shots = "".join(f'<img src="img/{s}-shot{i}.jpg" alt="{html.escape(g["name"])} screenshot {i}" loading="lazy">' for i in range(1, n + 1))
+    shots = "".join(f'<img src="{v("img/%s-shot%d.jpg" % (s, i))}" alt="{html.escape(g["name"])} screenshot {i}" loading="lazy">' for i in range(1, n + 1))
     docs = (f'<small><a href="support.html#{s}">Support</a> &middot; <a href="privacy/{s}.html">Privacy</a></small>' if g.get("docs", True) else "")
     label = "Coming to the App Store" if g["status"] == "Coming soon" else "In the works"
     return f"""
 <article class="game" id="{s}" style="--accent: {g['accent']}">
-  <img class="banner" src="img/{s}-header.jpg" alt="{html.escape(g['name'])} key art" loading="lazy">
+  <img class="banner" src="{v("img/" + s + "-header.jpg")}" alt="{html.escape(g['name'])} key art" loading="lazy">
   <div class="body">
     <div>
-      <div class="title"><img src="img/{s}-icon.jpg" alt="{html.escape(g['name'])} app icon"><div><h3>{html.escape(g['name'])}</h3>{badge}</div></div>
+      <div class="title"><img src="{v("img/" + s + "-icon.jpg")}" alt="{html.escape(g['name'])} app icon"><div><h3>{html.escape(g['name'])}</h3>{badge}</div></div>
       <p class="tag">{html.escape(g['tag'])}</p>
       <p>{html.escape(g['blurb'])}</p>
       <ul class="facts">{facts}</ul>
@@ -156,7 +160,7 @@ def game_card(g):
 </article>"""
 
 def index():
-    icons = "".join(f'<a href="#{g["slug"]}"><img src="img/{g["slug"]}-icon.jpg" alt="{html.escape(g["name"])}"></a>' for g in GAMES)
+    icons = "".join(f'<a href="#{g["slug"]}"><img src="{v("img/" + g["slug"] + "-icon.jpg")}" alt="{html.escape(g["name"])}"></a>' for g in GAMES)
     cards = "".join(game_card(g) for g in GAMES)
     body = f"""
 <main>
