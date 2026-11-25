@@ -18,15 +18,15 @@ GAMES = [
          blurb="A rubber-band physics puzzle. Snip the right band and a masked bandit flings into its getaway tube. Snip the wrong one and you're busted.",
          facts=["300 puzzles", "30 worlds", "Bandits with big personalities"]),
     dict(slug="hex-appeal", name="Hex Appeal", tag="Turn the tiles. Connect the light.", accent="#7a5cff",
-         status="Coming soon", store=None,
+         status="Coming soon", store=None, hidden=True,  # hidden while publisher talks are open
          blurb="A calm light-path puzzle. Rotate glowing glass tiles to send light from every core to every gem, then watch the board bloom.",
          facts=["200 relaxing puzzles", "7 hand-lit worlds", "No timers, no lives"]),
     dict(slug="twisted-system", name="Blade Runners: Twisted System", tag="Jump. Duck. Survive the spiral.", accent="#ff8a1f",
-         status="Coming soon", store=None,
+         status="Out now", store="https://apps.apple.com/app/id6808706055",
          blurb="A fast one-thumb obstacle race on a track that winds around a giant tower. Dodge spinning blades and outrun three rivals.",
          facts=["Endless and race modes", "20 skins to unlock", "Game Center leaderboards"]),
     dict(slug="iqube", name="iQube: Intelligent Blocks", tag="Outsmart the rolling grid.", accent="#18c9bb",
-         status="Coming soon", store=None,
+         status="Out now", store="https://apps.apple.com/app/id6815485986",
          blurb="A neon puzzle-action game. Mark, capture and blast a rolling wall of cubes before the stage crumbles under you.",
          facts=["9 worlds to conquer", "Endless mode", "Game Center leaderboards"]),
     dict(slug="itty-bitty-angler", name="Itty Bitty Angler", tag="Big fish. Tiny world.", accent="#f39a1e",
@@ -34,6 +34,7 @@ GAMES = [
          blurb="A top-down fishing adventure. Steer your boat across hand-crafted waters, spot shadows under the surface, land your lure in front of them and fight each fish in a tug-of-war.",
          facts=["A journal of species to fill", "Gear to upgrade", "Legends hiding in every region"]),
 ]
+GAMES = [g for g in GAMES if not g.get("hidden")]
 
 CSS = """
 @font-face { font-family: "Lilita One"; src: url("FONTDIR/LilitaOne-Regular.ttf") format("truetype"); font-display: swap; }
@@ -168,7 +169,7 @@ def index():
 
 <section id="games"><div class="wrap">
   <h2>Our games</h2>
-  <p class="lead">One out now, five on the way.</p>
+  <p class="lead">Three out now, two on the way.</p>
   {cards}
 </div></section>
 
@@ -272,13 +273,14 @@ def write(rel, text):
     open(p, "w", encoding="utf-8").write(text)
 
 def build():
+    write("CNAME", "yogeestudios.com\n")
     write("style.css", CSS.replace("FONTDIR", "fonts"))
     write("index.html", index())
 
     # ---- privacy pages (existing policies are reused as written)
     pol = {}
     pol["fliplits"] = md_to_html(open(os.path.join(PROJECTS, "Fliplits/Docs/PrivacyPolicy.md"), encoding="utf-8").read().replace("[your support email]", EMAIL))
-    pol["hex-appeal"] = main_of(os.path.join(PROJECTS, "3D Cyber Casual Game/Docs/AppStore/site/privacy.html"))
+    if any(g["slug"] == "hex-appeal" for g in GAMES): pol["hex-appeal"] = main_of(os.path.join(PROJECTS, "3D Cyber Casual Game/Docs/AppStore/site/privacy.html"))
     pol["snap-bandits"] = md_to_html(SNAP_PRIVACY)
     pol["twisted-system"] = main_of(os.path.join(PROJECTS, "Twisted System/AppStore/privacy-policy.html"))
     pol["iqube"] = md_to_html(open(os.path.join(PROJECTS, "iQube intelligent blocks/Marketing/App Store/Privacy_Policy.md"), encoding="utf-8").read())
